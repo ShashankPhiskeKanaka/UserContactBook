@@ -10,6 +10,10 @@ const errorMessages = {
     EXISTS : {
         message : "Resource already exists",
         status : 400
+    },
+    NOTEXISTS : {
+        message : "Resource not available",
+        status : 404
     }
 }
 

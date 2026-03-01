@@ -7,6 +7,11 @@ interface baseUser {
     deletedAt? : Date
 }
 
+interface userData {
+    id : string,
+    role : string
+}
+
 abstract class userMethodsClass {
     abstract register ( name : string, password : string, role : string ) : Promise<baseUser>;
     abstract get ( id : string ) : Promise<baseUser>;
@@ -15,4 +20,4 @@ abstract class userMethodsClass {
 }
 
 export { userMethodsClass }
-export type { baseUser }
+export type { baseUser, userData }

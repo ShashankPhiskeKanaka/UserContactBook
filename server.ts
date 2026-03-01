@@ -15,7 +15,7 @@ import { authRouter } from "./router/v2/auth.router";
 import { userRouter } from "./router/v2/user.router";
 import { authorize } from "./middleware/authorize";
 import { cloudinaryConfig } from "./db/cloudinary";
-import { fileRouter } from "./router/v2/file.router";
+import { fileRouter } from "./router/v2/files/file.router";
 
 const app = express();
 app.use(express.json());
