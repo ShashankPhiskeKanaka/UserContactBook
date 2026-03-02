@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "dev": "nodemon --exec tsx server.ts",
+    "dev": "nodemon --ignore ./swagger/bundle.json --exec tsx server.ts",
     "migrate:create": "node-pg-migrate create",
     "migrate:up": "node-pg-migrate up",
     "migrate:down": "node-pg-migrate down"
@@ -23,6 +23,9 @@
     "@types/node": "^25.3.0",
     "@types/pg": "^8.16.0",
     "@types/request-ip": "^0.0.41",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/yamljs": "^0.2.34",
     "jest": "^30.2.0",
     "node-pg-migrate": "^8.0.4",
     "nodemon": "^3.1.14",
@@ -33,6 +36,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@apidevtools/swagger-cli": "^4.0.4",
     "@ngrok/ngrok": "^1.7.0",
     "@prisma/adapter-pg": "^7.4.1",
     "@prisma/client": "^7.4.1",
@@ -51,6 +55,9 @@
     "multer": "^2.0.2",
     "ngrok": "^5.0.0-beta.2",
     "request-ip": "^3.3.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0",
     "zod": "^4.3.6"
   }
 }

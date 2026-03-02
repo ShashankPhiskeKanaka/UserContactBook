@@ -1,0 +1,55 @@
+# components/schemas.yaml
+LoginData:
+  type: object
+  required: [email, password]
+  properties:
+    email: { type: string, example: "user@example.com" }
+    password: { type: string, example: "password123" }
+ForgetAuthData:
+  type: object
+  required: [email]
+  properties:
+    email: { type: string, example: "user@example.com" }
+ChangePassAuthData:
+  type: object
+  required: [password]
+  properties:
+    password: { type: string, example: "password@123" }
+
+DocumentResponse:
+  type: object
+  properties:
+    id: { type: string }
+    userId: { type: string }
+    name: { type: string }
+    storedId: { type: string }
+    storedPath: { type: string }
+    fileType: { type: string }
+    size: { type: number }
+    status: { type: string } 
+    createdAt: { type: string, format: date-time }
+    deletedAt: { type: string, format: date-time }
+    format: { type: string }
+    
+DocumentSignatureResponse:
+  type: object
+  properties:
+    signature: { type: string }
+    timestamp: { type: number }
+    api_key: { type: string }
+    public_id: { type: string }
+    folder: { type: string }
+    resource_type: { type: string }
+    max_file_size: { type: number }
+
+UnauthorizedErrorResponse:
+  type: object
+  properties:
+    success: { type: boolean, example: false }
+    message: { type: string, example: "Unauthorized" }
+
+InvalidErrorResponse:
+  type: object
+  properties:
+    sucsess: { type: boolean, example: false }
+    message: { type: string, example: "Invalid data" }

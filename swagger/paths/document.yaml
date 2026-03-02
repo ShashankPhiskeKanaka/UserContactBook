@@ -1,0 +1,130 @@
+# Endpoint: /v2/file/document
+upload:
+  post:
+    summary: Upload a document
+    tags: [Documents]
+    security:
+      - accessTokenAuth: []
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              file:
+                type: string
+                format: binary
+                description: The document file to upload
+    responses:
+      200:
+        description: Document uploaded successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success: { type: boolean, example: true }
+                data:
+                  $ref: '../components/schemas.yaml#/DocumentResponse'
+      401:
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'
+      400:
+        description: Invalid request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/InvalidErrorResponse'
+
+# Endpoint: /v2/file/document/{id}
+byId:
+  get:
+    summary: Fetch a document
+    tags: [Documents]
+    security:
+      - accessTokenAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: The unique id of the document to be fetched
+    responses:
+      200:
+        description: Document fetched successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success: { type: boolean, example: true }
+                data:
+                  $ref: '../components/schemas.yaml#/DocumentResponse'
+      401:
+        description: Unauthorized access
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'
+  
+  delete:
+    summary: Delete a document
+    tags: [Documents]
+    security:
+      - accessTokenAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: The unique id of the document to be deleted
+    responses:
+      200:
+        description: Document deleted successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success: { type: boolean, example: true }
+                data:
+                  $ref: '../components/schemas.yaml#/DocumentResponse'
+      401:
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'
+
+# Endpoint: /v2/file/documents/
+listAll:
+  get:
+    summary: Fetch all documents
+    tags: [Documents]
+    security:
+      - accessTokenAuth: []
+    responses:
+      200:
+        description: List of documents fetched successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success: { type: boolean, example: true }
+                data:
+                  type: array
+                  items:
+                    $ref: '../components/schemas.yaml#/DocumentResponse'
+      401:
+        description: Unauthorized access
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'

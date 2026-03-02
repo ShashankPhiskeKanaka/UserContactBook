@@ -1,0 +1,120 @@
+# paths/auth.yaml
+login:
+  post:
+    summary: Login user
+    tags: [Auth]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yaml#/LoginData'
+    responses:
+      200:
+        description: Success
+        headers:
+          Set-Cookie:
+            schema: { type: string }
+
+# paths/auth.yaml
+forget:
+  post:
+    summary: Forget user password
+    tags: [Auth]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yaml#/ForgetAuthData'
+    responses:
+      200:
+        description: Password reset email sent successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                message:
+                  type: string
+                  example: "Password reset instructions sent to your email."
+      400:
+        description: Invalid request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/InvalidErrorResponse'
+
+# paths/auth.yaml
+changePassword:
+  patch:
+    summary: change user password
+    tags: [Auth]
+    parameters:
+      - in: query
+        name: token
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yaml#/ChangePassAuthData'
+    responses:
+      200:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                message:
+                  type: string
+                  example: "Password reset successfully"
+      400:
+        description: Invalid request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/InvalidErrorResponse'
+
+# paths/auth.yaml
+logout:
+  get:
+    summary: Logout user
+    tags: [Auth]
+    security:
+      - accestokenAuth: []
+      - refreshTokenAuth: []
+    parameters:
+      - in: query
+        name: flag
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                message:
+                  type: string
+                  example: "User logged out successfully"
+      401:
+        description: Unauthorized request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'       

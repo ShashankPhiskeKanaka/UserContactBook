@@ -14,12 +14,6 @@ const fileController = fileFactory.create();
 fileRouter.post("/cloudinary", errorHandler.controllerWrapper(fileController.cloudinaryResponse));
 fileRouter.use(errorHandler.controllerWrapper(authorize))
 
-fileRouter.get("/documents", errorHandler.controllerWrapper(fileController.getDocs));
-
-fileRouter.post("/document", errorHandler.controllerWrapper(uploadDoc.single('myFile')), errorHandler.controllerWrapper(fileController.uploadDoc));
-fileRouter.get("/document/:id", errorHandler.controllerWrapper(fileController.getDoc));
-fileRouter.delete("/document", errorHandler.controllerWrapper(fileController.deleteDoc));
-
 fileRouter.use("/profile", imageRouter);
 
 fileRouter.use("/profiles", imagesRouter);

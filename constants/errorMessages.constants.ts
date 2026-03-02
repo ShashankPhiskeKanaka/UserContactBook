@@ -14,6 +14,10 @@ const errorMessages = {
     NOTEXISTS : {
         message : "Resource not available",
         status : 404
+    },
+    UNAUTHORIZED : {
+        message : "Unauthorized, Please login",
+        status : 401
     }
 }
 

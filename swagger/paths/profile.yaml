@@ -1,0 +1,126 @@
+# Endpoint: /v2/file/profile/{fileName}
+uploadByName:
+  post:
+    summary: Upload a file
+    tags: [Profiles]
+    security:
+      - accessTokenAuth: []
+    parameters:
+      - in: path
+        name: fileName
+        required: true
+        schema: 
+          type: string
+        description: Name of the file to be uploaded
+    responses:
+      200:
+        description: File uploaded successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success: { type: boolean, example: true }
+                data: 
+                  $ref: '../components/schemas.yaml#/DocumentSignatureResponse'
+      401:
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'
+      400:
+        description: Invalid request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/InvalidErrorResponse'
+
+# Endpoint: /v2/file/profile/{id}
+byId:
+  get:
+    summary: Fetch a file
+    tags: [Profiles]
+    security:
+      - accessTokenAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: 
+          type: string
+        description: id of the file to be fetched
+    responses:
+      200:
+        description: File fetched successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success: { type: boolean, example: true }
+                data: 
+                  $ref: '../components/schemas.yaml#/DocumentResponse'
+      401:
+        description: Unauthorized access
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'
+
+  delete:
+    summary: Delete a file
+    tags: [Profiles]
+    security:
+      - accessTokenAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: 
+          type: string
+        description: id of the file to be deleted
+    responses:
+      200:
+        description: File deleted successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success: { type: boolean, example: true }
+                data: 
+                  $ref: '../components/schemas.yaml#/DocumentResponse'
+      401:
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'
+
+# Endpoint: /v2/file/profile/
+listAll:
+  get:
+    summary: Fetch all profile files
+    tags: [Profiles]
+    security:
+      - accessTokenAuth: []
+    responses:
+      200:
+        description: Files fetched successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success: { type: boolean, example: true }
+                data: 
+                  type: array
+                  items:
+                    $ref: '../components/schemas.yaml#/DocumentResponse'
+      401:
+        description: Unauthorized access
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'

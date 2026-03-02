@@ -96,13 +96,13 @@ class fileServicesClass {
      * @returns 
      */
     uploadDoc = async ( fileData : any, userData : userData ) => {
-        if(!fileData) throw new serverError(400, "No file provided");
+        if(!fileData) throw new serverError(errorMessages.VALIDATION.status, errorMessages.VALIDATION.message);
 
         const type = await fileTypeFromBuffer(fileData.buffer);
         const allowed = ['pdf'];
 
         if(!type || !allowed.includes(type.ext)) {
-            throw new serverError(400, "Invalid file type");
+            throw new serverError(errorMessages.VALIDATION.status, errorMessages.VALIDATION.message);
         }
 
         const storedId = `${crypto.randomBytes(40).toString('hex')}.pdf`

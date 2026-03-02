@@ -1,0 +1,15 @@
+# components/security.yaml
+bearerAuth:
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+
+accestokenAuth:
+  type: apiKey
+  in: cookie
+  name: token
+
+refreshTokenAuth:
+  type: apiKey
+  in: cookie
+  name: refreshToken

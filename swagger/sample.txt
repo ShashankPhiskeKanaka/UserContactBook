@@ -1,0 +1,228 @@
+# openapi: 3.0.0
+# info:
+#   title: Node.js File & Auth API
+#   version: 1.0.0
+#   description: Centralized API Documentation
+
+# servers:
+#   - url: http://localhost:5000
+#     description: Local server
+
+# components:
+#   securitySchemes:
+#     bearerAuth:
+#       type: http
+#       scheme: bearer
+#       bearerFormat: JWT
+
+#   schemas:
+#     LoginData:
+#       type: object
+#       required: [email, password]
+#       properties:
+#         email: { type: string, example: "user@example.com" }
+#         password: { type: string, example: "password123" }
+
+#     DocumentResponse:
+#       type: object
+#       properties:
+#         id: { type: string }
+#         name: { type: string }
+#         createdAt: { type: string, format: date-time }
+
+#     UploadFileResponse:
+#       type: object
+#       properties:
+#         success: { type: boolean }
+#         fileId: { type: string }
+
+#     UnauthorizedErrorResponse:
+#       type: object
+#       properties:
+#         error: { type: string, example: "Unauthorized" }
+
+# # auth
+# paths:
+#   /v2/auth/login:
+#     post:
+#       tags: [Auth]
+#       summary: Login user
+#       requestBody:
+#         required: true
+#         content:
+#           application/json:
+#             schema:
+#               $ref: '#/components/schemas/LoginData'
+#       responses:
+#         200:
+#           description: OK
+#           headers:
+#             Set-Cookie:
+#               description: Auth tokens
+#               schema: { type: string }
+#           content:
+#             application/json:
+#               schema:
+#                 type: object
+#                 properties:
+#                   success: { type: boolean, example: true }
+
+#   /v2/file/profile/{id}:
+#     get:
+#       tags: [Profiles]
+#       security: [{ bearerAuth: [] }]
+#       parameters:
+#         - name: id
+#           in: path
+#           required: true
+#           schema: { type: string }
+#       responses:
+#         200:
+#           description: Success
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: '#/components/schemas/DocumentResponse'
+
+# # images
+#   /v2/file/profile/{fileName}:
+#     post:
+#       summary: Upload a file
+#       tags: [Profiles]
+#       security:
+#         - bearerAuth: []
+#       parameters:
+#         - in: path
+#           name: fileName
+#           required: true
+#           schema: 
+#             type: string
+#           description: Name of the file to be uploaded
+#       responses:
+#         200:
+#           description: File uploaded successfully
+#           content:
+#             application/json:
+#               schema:
+#                 type: object
+#                 properties:
+#                   success:
+#                     type: boolean
+#                     example: true
+#                   data: 
+#                     $ref: '#/components/schemas/UploadFileResponse'
+#         401:
+#           description: Unauthorized
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: '#/components/schemas/UnauthorizedErrorResponse'
+#         400:
+#           description: Invalid request
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: '#/components/schemas/InvalidErrorResponse'
+#   /v2/file/profile/{id}:
+#     get:
+#       summary: Fetch a file
+#       tags: [Profiles]
+#       security:
+#         - bearerAuth: []
+#       parameters:
+#         - in: path
+#           name: id
+#           required: true
+#           schema: 
+#             type: string
+#           description: id of the file to be fetched
+#       responses:
+#         200:
+#           description: File fetched successfully
+#           content:
+#             application/json:
+#               schema:
+#                 type: object
+#                 properties:
+#                   success:
+#                     type: boolean
+#                     example: true
+#                   data: 
+#                     $ref: '#/components/schemas/DocumentResponse'
+#         401:
+#           description: Unauthorized access
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: '#/components/schemas/UnauthorizedErrorResponse'
+#         400:
+#           description: Invalid request parameters
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: '#/components/schemas/InvalidErrorResponse'
+#   /v2/file/profile/{id}:
+#     delete:
+#       summary: Delete a file
+#       tags: [Profiles]
+#       security:
+#         - bearerAuth: []
+#       parameters:
+#         - in: path
+#           name: id
+#           required: true
+#           schema: 
+#             type: string
+#           description: id of the file to be deleted
+#       responses:
+#         200:
+#           description: File deleted successfully
+#           content:
+#             application/json:
+#               schema:
+#                 type: object
+#                 properties:
+#                   success:
+#                     type: boolean
+#                     example: true
+#                   data: 
+#                     $ref: '#/components/schemas/DocumentResponse'
+#         401:
+#           description: Unauthorized
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: '#/components/schemas/UnauthorizedErrorResponse'
+#         400:
+#           description: Invalid request
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: '#/components/schemas/InvalidErrorResponse'
+#   /v2/file/profile/:
+#     get:
+#       summary: Fetch all profile files
+#       tags: [Profiles]
+#       security:
+#         - bearerAuth: []
+#       responses:
+#         200:
+#           description: Files fetched successfully
+#           content:
+#             application/json:
+#               schema:
+#                 type: object
+#                 properties:
+#                   success:
+#                     type: boolean
+#                     example: true
+#                   data: 
+#                     type: array
+#                     items:
+#                       $ref: '#/components/schemas/DocumentResponse'
+#         401:
+#           description: Unauthorized access
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: '#/components/schemas/UnauthorizedErrorResponse'

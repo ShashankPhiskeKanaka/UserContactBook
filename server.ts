@@ -1,14 +1,10 @@
 import express from "express";
 import cookieparser from "cookie-parser";
 import helmet from "helmet";
-import { connectDb } from "./db/db";
 import { errorHandler, globalErrorHandler } from "./factory/error.factory";
-import { contactRouter } from "./router/v1/contact.router";
 import { v2ContactRouter } from "./router/v2/contact.router";
 import { logger } from "./middleware/logger";
 import { config } from "./config/env";
-import { reportRouter } from "./router/v1/report.router";
-import { contactsRouter } from "./router/v1/contacts.router";
 import { v2ReportRouter } from "./router/v2/report.router";
 import { v2ContactsRouter } from "./router/v2/contacts.router";
 import { authRouter } from "./router/v2/auth.router";
@@ -16,11 +12,18 @@ import { userRouter } from "./router/v2/user.router";
 import { authorize } from "./middleware/authorize";
 import { cloudinaryConfig } from "./db/cloudinary";
 import { fileRouter } from "./router/v2/files/file.router";
+import { execSync } from "child_process";
+import fs from "fs"
+import swaggerUi from "swagger-ui-express";
+
+execSync('npx swagger-cli bundle ./swagger/index.yaml --outfile ./swagger/bundle.json --type json');
+const swaggerDocument = JSON.parse(fs.readFileSync('./swagger/bundle.json', 'utf8'));
 
 const app = express();
 app.use(express.json());
 app.use(cookieparser());
 app.use(helmet());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 cloudinaryConfig();
 

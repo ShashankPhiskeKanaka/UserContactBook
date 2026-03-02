@@ -1,0 +1,44 @@
+openapi: 3.0.0
+info:
+  title: My Modular API
+  version: 1.0.0
+
+paths:
+  /v2/auth/login:
+    $ref: './paths/auth.yaml#/login'
+  /v2/auth/forget:
+    $ref: './paths/auth.yaml#/forget'
+  /v2/auth/{token}:
+    $ref: './paths/auth.yaml#/changePassword'
+  /v2/auth/{flag}:
+    $ref: './paths/auth.yaml#/logout'
+
+  /v2/file/document:
+    $ref: './paths/document.yaml#/upload'
+  
+  /v2/file/document/{id}:
+    get:
+      $ref: './paths/document.yaml#/byId/get'
+    delete:
+      $ref: './paths/document.yaml#/byId/delete'
+
+  /v2/file/documents/:
+    $ref: './paths/document.yaml#/listAll'
+
+  /v2/file/profile/{fileName}:
+    $ref: './paths/profile.yaml#/uploadByName'
+
+  /v2/file/profile/{id}:
+    get:
+      $ref: './paths/profile.yaml#/byId/get'
+    delete:
+      $ref: './paths/profile.yaml#/byId/delete'
+
+  /v2/file/profile/:
+    $ref: './paths/profile.yaml#/listAll'
+
+components:
+  schemas:
+    $ref: './components/schemas.yaml'
+  securitySchemes:
+    $ref: './components/security.yaml'
