@@ -1,3 +1,4 @@
+import type { userData } from "../repository/user/user.methods";
 import type { userPgRepositoryClass } from "../repository/user/user.pgrepository";
 import { authUtil } from "../utils/auth.utils";
 import { serverError } from "../utils/error.utils";
@@ -36,14 +37,11 @@ class userServicesClass {
      * @param token 
      * @returns 
      */
-    delete = async ( token : string ) => {
-        // hands over the token from the cookies to the decodeToken module from authUtil and takes extracted id and role
-        const { id, role } = authUtil.decodeToken(token);
-        // uses the getById method from user repository to check if the user with the specified id exists or not
-        let user = await this.userMethods.getById(id);
+    delete = async ( userData : userData ) => {
+        let user = await this.userMethods.getById(userData.id);
         if(!user) throw new serverError(400, "User does not exist");
         // finally provides the id to the delete methods from the user repository which soft deletes the user
-        user = await this.userMethods.delete(id);
+        user = await this.userMethods.delete(userData.id);
         // returns the soft deleted user back to the controller
         return user;
     }

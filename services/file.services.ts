@@ -97,7 +97,7 @@ class fileServicesClass {
      */
     uploadDoc = async ( fileData : any, userData : userData ) => {
         if(!fileData) throw new serverError(errorMessages.VALIDATION.status, errorMessages.VALIDATION.message);
-
+        
         const type = await fileTypeFromBuffer(fileData.buffer);
         const allowed = ['pdf'];
 
@@ -108,7 +108,6 @@ class fileServicesClass {
         const storedId = `${crypto.randomBytes(40).toString('hex')}.pdf`
         const userPath = path.join(`uploads`, 'users', userData.id);
         const storedPath = path.join(userPath, storedId);
-
         await mkdir(userPath, { recursive : true })
 
         const data = await this.fileMethods.uploadDoc({ ...fileData, format : type.ext, fileType : "document" }, userData, storedId, storedPath);

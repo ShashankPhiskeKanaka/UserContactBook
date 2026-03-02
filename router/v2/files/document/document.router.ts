@@ -10,7 +10,7 @@ const documentRouter = express.Router();
 const fileController = fileFactory.create();
 
 
-documentRouter.post("/", errorHandler.controllerWrapper(validate(uploadDocumentSchema)), errorHandler.controllerWrapper(uploadDoc.single('myFile')),errorHandler.controllerWrapper(fileController.uploadDoc));
+documentRouter.post("/",  errorHandler.controllerWrapper(uploadDoc.single('myFile')),errorHandler.controllerWrapper(validate(uploadDocumentSchema)), errorHandler.controllerWrapper(fileController.uploadDoc));
 documentRouter.get("/:id", errorHandler.controllerWrapper(validate(getImageSchema)), errorHandler.controllerWrapper(fileController.getDoc));
 documentRouter.delete("/:id", errorHandler.controllerWrapper(validate(getImageSchema)), errorHandler.controllerWrapper(fileController.deleteDoc));
 

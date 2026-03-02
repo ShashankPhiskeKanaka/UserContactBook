@@ -37,6 +37,19 @@ paths:
   /v2/file/profile/:
     $ref: './paths/profile.yaml#/listAll'
 
+  /v2/contact:
+    post:
+      $ref: './paths/contact.yaml#/byMethod/post'
+    patch:
+      $ref: './paths/contact.yaml#/byMethod/patch'
+
+  /v2/contact/{id}:
+    delete:
+      $ref: './paths/contact.yaml#/byId/delete'
+    get:
+      $ref: './paths/contact.yaml#/byId/get'
+
+
 components:
   schemas:
     $ref: './components/schemas.yaml'

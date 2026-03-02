@@ -4,6 +4,8 @@ import { pool } from "../../db/postgres";
 import crypto from "crypto"
 import { writeFile } from "fs/promises";
 import type { userData } from "../user/user.methods";
+import { serverError } from "../../utils/error.utils";
+import retry from "async-retry"
 
 class filePgRepositoryClass {
 
@@ -123,11 +125,11 @@ class filePgRepositoryClass {
      */
     getFiles = async ( userData : userData ) => {
         const res = await pool.query(
-            `SELECT * FROM files WHERE ($1::uuid IS NULL OR "userId" = $1) AND ("deletedAt" IS NULL)`,
-            [userData.id]
+            `SELECT * FROM files WHERE ($1::uuid IS NULL OR "userId" = $1) AND ("deletedAt" IS NULL) AND ("fileType" = $2)`,
+            [userData.id, "image"]
         )
 
-        return res.rows[0];
+        return res.rows;
     }
     /**
      * Handles the actual process of uploading the file and creating a file record in db
@@ -138,16 +140,36 @@ class filePgRepositoryClass {
      * @param storedPath 
      * @returns 
      */
-    uploadDoc = async ( data : any, userData : userData, storedId : string, storedPath : string ) => {
-        await writeFile(storedPath, data.buffer);
+    uploadDoc = async (data: any, userData: userData, storedId: string, storedPath: string) => {
+        
+        await retry(async (bail, attempt) => {
+            try {
+                console.log(`Attempt ${attempt}: Writing file to ${storedPath}`);
+                await writeFile(storedPath, data.buffer);
+            } catch (err: any) {
+                if (err.code === 'ENOENT') {
+                    return bail(new serverError(400, "Upload directory does not exist on server"));
+                }
+                
+                console.error(`Attempt ${attempt} failed: ${err.message}`);
+                throw err; 
+            }
+        }, {
+            retries: 3,
+            factor: 2,
+            minTimeout: 1000
+        });
 
+        // 4. Proceed to Database entry only after successful write
         const res = await pool.query(
-            `INSERT INTO files ("userId", name, "storedId", "storedPath", "fileType", size, status, format) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+            `INSERT INTO files ("userId", name, "storedId", "storedPath", "fileType", size, status, format) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
             [userData.id, data.fieldname, storedId, storedPath, data.fileType, data.size, 'ready', data.format]
-        )
+        );
 
         return res.rows[0];
-    }
+    };
+
 
     /**
      * Fetches the document record from the db
@@ -173,8 +195,8 @@ class filePgRepositoryClass {
      */
     getDocs = async ( userData : any ) => {
         const res = await pool.query(
-            `SELECT * FROM files WHERE ($1::uuid IS NULL OR "userId" = $1) AND ("deletedAt" IS NULL)`,
-            [userData.id]
+            `SELECT * FROM files WHERE ($1::uuid IS NULL OR "userId" = $1) AND ("deletedAt" IS NULL) AND ("fileType" = $2)`,
+            [userData.id, "document"]
         )
 
         return res.rows;

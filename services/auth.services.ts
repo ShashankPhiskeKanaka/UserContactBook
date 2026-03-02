@@ -1,3 +1,4 @@
+import { errorMessages } from "../constants/errorMessages.constants";
 import type { tokenPgRepositoryClass } from "../repository/token/token.pgrepository";
 import type { userPgRepositoryClass } from "../repository/user/user.pgrepository"
 import { authUtil } from "../utils/auth.utils";
@@ -19,7 +20,7 @@ class authServicesClass {
     login = async ( name : string, password : string ) => {
         // checks if the client exists or not using the get method of the user repository and hands over the name data
         const user = await this.userMethods.get(name);
-        if(!user) throw new serverError(400, "User does not exists");
+        if(!user) throw new serverError(errorMessages.NOTFOUND.status, errorMessages.NOTFOUND.message);
         // compares the provided password from the client and the stored hash password using the comparePassword methods frm authUtil
         const flag = await authUtil.comparePassword(password, user.password);
         // if the passwords match then a refresh token is generated using the create methods from the token repository
@@ -29,7 +30,7 @@ class authServicesClass {
             return data;
         }
         // raises an error if the passwords dont match
-        throw new serverError(400, "Incorrect Password");
+        throw new serverError(errorMessages.VALIDATION.status, errorMessages.VALIDATION.message);
     }
 
     /**
@@ -44,7 +45,7 @@ class authServicesClass {
         const { id } = authUtil.decodeForgetToken(token);
         // checks if the user with the specified id exists or not
         let user = await this.userMethods.getById(id);
-        if(!user) throw new serverError(400, "User does not exist");
+        if(!user) throw new serverError(errorMessages.NOTFOUND.status, errorMessages.NOTFOUND.message);
         // generates a hashed password using hashPass module from authUtil
         const hashedPass = await authUtil.hashPass(password);
         // hands over the id and hashed password to the update method from the user repository layer
@@ -62,7 +63,7 @@ class authServicesClass {
     forgetPass = async ( name : string ) => {
         // checks if the user with the specified name exists or not
         let user = await this.userMethods.get(name);
-        if(!user) throw new serverError(400, "User does not exist");
+        if(!user) throw new serverError(errorMessages.NOTFOUND.status, errorMessages.NOTFOUND.message);
         // generates a forget token with the user id using the generateForgetToken module from authUtil
         const token = authUtil.generateForgetToken(user.id ?? "");
         // sends back the forget token to auth controller

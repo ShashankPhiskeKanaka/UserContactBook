@@ -1,0 +1,155 @@
+byMethod:
+  post:
+    summary: "Create a contact"
+    tags: [Contact]
+    security:
+      - accestokenAuth: []
+      - refreshTokenAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yaml#/CreateContactData'
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  $ref: '../components/schemas.yaml#/ContactData'
+      400:
+        description: Invalid request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/InvalidErrorResponse'
+      401:
+        description: Unauthorized request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'
+  patch:
+    summary: "Update a contact"
+    tags: [Contact]
+    security:
+      - accestokenAuth: []
+      - refreshTokenAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yaml#/UpdateContactData'
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  $ref: '../components/schemas.yaml#/ContactData'
+      400:
+        description: Invalid request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/InvalidErrorResponse'
+      401:
+        description: Unauthorized request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'
+
+byId:
+  delete:
+    summary: "Delete a contact"
+    tags: [Contact]
+    security:
+      - accestokenAuth: []
+      - refreshTokenAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: 
+          type: string
+        description: id of the contact to be deleted
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  $ref: '../components/schemas.yaml#/ContactData'
+      400:
+        description: Invalid request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/InvalidErrorResponse'
+      401:
+        description: Unauthorized request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'
+
+  get:
+    summary: "Fetch a contact"
+    tags: [Contact]
+    security:
+      - accestokenAuth: []
+      - refreshTokenAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: 
+          type: string
+        description: id of the contact to be fetched
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  $ref: '../components/schemas.yaml#/ContactData'
+      400:
+        description: Invalid request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/InvalidErrorResponse'
+      401:
+        description: Unauthorized request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/UnauthorizedErrorResponse'
+    

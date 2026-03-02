@@ -30,7 +30,7 @@ DocumentResponse:
     createdAt: { type: string, format: date-time }
     deletedAt: { type: string, format: date-time }
     format: { type: string }
-    
+
 DocumentSignatureResponse:
   type: object
   properties:
@@ -51,5 +51,31 @@ UnauthorizedErrorResponse:
 InvalidErrorResponse:
   type: object
   properties:
-    sucsess: { type: boolean, example: false }
+    success: { type: boolean, example: false }
     message: { type: string, example: "Invalid data" }
+
+CreateContactData:
+  type: object
+  properties:
+    name: { type: string, example: "Shashank" }
+    email: { type: string, example: "shashank@gmail.com" }
+    phoneNumber: { type: string, example: 9999999999 }
+    address: { type: string, example: "abc street" }
+UpdateContactData:
+  type: object
+  properties:
+    id: { type: string }
+    name: { type: string, example: "Shashank" }
+    email: { type: string, example: "shashank@gmail.com" }
+    phoneNumber: { type: string, example: 9999999999 }
+    address: { type: string, example: "abc street" }
+ContactData:
+  type: object
+  properties:
+    id: { type: string }
+    name: { type: string }
+    phoneNumber: { type: string }
+    address: { type: string }
+    createdAt: { type: string, format: date-time }
+    deletedAt: { type: string, format: date-time } 
+    ownerId: { type: string }

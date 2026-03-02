@@ -14,10 +14,11 @@ import { errorMessages } from "../constants/errorMessages.constants";
 const authorize = async (req : Request, res : Response, next : NextFunction) => {
     // checks if access and refresh token are available in the cookies or not
     if(!req.cookies?.token || !req.cookies?.refreshToken) throw new serverError(errorMessages.UNAUTHORIZED.status, errorMessages.UNAUTHORIZED.message);
+
     // hands over the access token to the decodeToken module from authUtil to get the id and role from the token
     const { id, role } = authUtil.decodeToken(req.cookies.token);
     // if id and role are not decoded then throws an error
-    if(!id || !role) throw new serverError(400, "Please login");
+    if(!id || !role) throw new serverError(errorMessages.UNAUTHORIZED.status, errorMessages.UNAUTHORIZED.message);
     // forwards the request if everything checks out
     req.user = { id, role };
     next();

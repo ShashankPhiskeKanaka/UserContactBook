@@ -16,7 +16,8 @@ const validate = ( schema : z.ZodTypeAny ) => {
             body : req.body,
             cookies : req.cookies,
             params : req.params,
-            query : req.query
+            query : req.query,
+            file: req.file
         })
         // if the validation fails then raises an error and logs the activity
         if(!result.success) {

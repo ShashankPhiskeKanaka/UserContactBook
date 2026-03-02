@@ -30,7 +30,7 @@ class userControllerClass {
      */
     delete = async ( req : Request, res : Response ) => {
         // extracts the token from the req cookies and hands it over to the delete method from the user services
-        const user = await this.userServices.delete(req.cookies.token)
+        const user = await this.userServices.delete(req.user)
         // clears the auth token and refresh token from the cookies
         res.clearCookie("token");
         res.clearCookie("refreshToken");

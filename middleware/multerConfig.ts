@@ -1,6 +1,7 @@
 import multer, { type FileFilterCallback } from "multer";
 import { serverError } from "../utils/error.utils";
 import type { Request } from "express";
+import { errorMessages } from "../constants/errorMessages.constants";
 
 const multerConfig = {
     storage: multer.memoryStorage(),
@@ -16,7 +17,7 @@ const multerConfig = {
         } else {
             // 3. Failure: Pass the error. 
             // Cast to 'any' if your custom serverError causes a Type mismatch with Multer's FileFilterCallback
-            const error = new serverError(400, "Invalid Data");
+            const error = new serverError(errorMessages.VALIDATION.status, errorMessages.VALIDATION.message);
             cb(error as any, false); 
         }
     }

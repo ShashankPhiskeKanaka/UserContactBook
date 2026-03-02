@@ -646,6 +646,272 @@
           }
         }
       }
+    },
+    "/v2/contact": {
+      "post": {
+        "summary": "Create a contact",
+        "tags": [
+          "Contact"
+        ],
+        "security": [
+          {
+            "accestokenAuth": []
+          },
+          {
+            "refreshTokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ContactData"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a contact",
+        "tags": [
+          "Contact"
+        ],
+        "security": [
+          {
+            "accestokenAuth": []
+          },
+          {
+            "refreshTokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ContactData"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/contact/{id}": {
+      "delete": {
+        "summary": "Delete a contact",
+        "tags": [
+          "Contact"
+        ],
+        "security": [
+          {
+            "accestokenAuth": []
+          },
+          {
+            "refreshTokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id of the contact to be deleted"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ContactData"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Fetch a contact",
+        "tags": [
+          "Contact"
+        ],
+        "security": [
+          {
+            "accestokenAuth": []
+          },
+          {
+            "refreshTokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id of the contact to be fetched"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ContactData"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -773,13 +1039,86 @@
       "InvalidErrorResponse": {
         "type": "object",
         "properties": {
-          "sucsess": {
+          "success": {
             "type": "boolean",
             "example": false
           },
           "message": {
             "type": "string",
             "example": "Invalid data"
+          }
+        }
+      },
+      "CreateContactData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shashank"
+          },
+          "email": {
+            "type": "string",
+            "example": "shashank@gmail.com"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": 9999999999
+          },
+          "address": {
+            "type": "string",
+            "example": "abc street"
+          }
+        }
+      },
+      "UpdateContactData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "Shashank"
+          },
+          "email": {
+            "type": "string",
+            "example": "shashank@gmail.com"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": 9999999999
+          },
+          "address": {
+            "type": "string",
+            "example": "abc street"
+          }
+        }
+      },
+      "ContactData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string"
           }
         }
       }
