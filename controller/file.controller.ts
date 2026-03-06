@@ -3,6 +3,7 @@ import { fileServicesClass } from "../services/file.services";
 import { v2 as cloudinary } from "cloudinary";
 import { serverError } from "../utils/error.utils";
 import path from "path";
+import { authUtil } from "../utils/auth.utils";
 
 class fileControllerClass {
     constructor (private fileServices : fileServicesClass ) {}
@@ -64,6 +65,7 @@ class fileControllerClass {
     deleteFile = async ( req : Request, res : Response ) => {
         // extracts the id from request parameter and user from request and hands it over to deleteFile methods from file service
         const data = await this.fileServices.deleteFile(req.params.id?.toString() ?? "", req.user);
+        authUtil.invalidateKey(req.user.id, "file");
         return res.json({
             sucess : true,
             data : data
@@ -106,6 +108,7 @@ class fileControllerClass {
     uploadDoc = async ( req : Request, res : Response ) => {
         // extracts the file and user data from the request and hands it over to the upload doc method from the file service
         const data = await this.fileServices.uploadDoc(req.file, req.user);
+        authUtil.invalidateKey(req.user.id, "document");
         return res.json({
             success : true,
             data : data
@@ -152,6 +155,7 @@ class fileControllerClass {
     deleteDoc = async ( req : Request, res : Response ) => {
         // extracts the document id and user data from the request and hands it over to deleteDoc method from file service
         const data = await this.fileServices.deleteDoc(req.params.id?.toString() ?? "", req.user);
+        authUtil.invalidateKey(req.user.id, "document");
         return res.json({
             success : true,
             data : data

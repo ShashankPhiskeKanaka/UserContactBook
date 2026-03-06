@@ -2,6 +2,9 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { config } from "../config/env"
 import { serverError } from "./error.utils"
+import type { Request } from "express"
+import { client } from "../caching/redis.client"
+import { logActivity } from "./logging.utils"
 
 /**
  * auth utils 
@@ -97,6 +100,45 @@ class authUtilsClass {
         }
 
         return userId;
+    }
+
+    generateKey = ( req: Request ) => {
+        const userId = req.user?.id || 'public';
+        const resource = req.baseUrl.split("/").pop() || 'global';
+
+        const sortedQuery = Object.keys(req.query).sort().map(key => `${key.toLowerCase()}=${String(req.query[key]).toLowerCase()}`)
+        .join('&');
+
+        const path = req.path.replace(/\/$/, "");
+
+        return `v1:cache:${userId}:${resource}:${path}${sortedQuery ? "?" + sortedQuery : ""}`;
+    }
+
+    invalidateKey = async ( userId: string, resource: string ) => {
+
+        const pattern = `v1:cache:${userId}:${resource}:*`
+
+        try{
+            if(!pattern.includes("*")){
+                await client.del(pattern);
+                return;
+            }
+
+            const keys: string[] = [];
+
+            for await (const key of client.scanIterator({
+                MATCH : pattern,
+                COUNT : 100
+            })) {
+                keys.push(...key);
+            }
+            if(keys.length > 0) {
+                await client.del(keys);
+            }
+            logActivity.log(`${resource} cache cleared`);
+        }catch (err : any) {
+            throw new serverError(err.status, err.message);
+        }
     }
 }
 

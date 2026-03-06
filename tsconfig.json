@@ -14,6 +14,7 @@
     "types": ["node", "jest"],
     "allowJs": true,
     "esModuleInterop": true,
+    "skipDefaultLibCheck": true,
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],

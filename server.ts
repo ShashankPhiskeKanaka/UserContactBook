@@ -15,6 +15,7 @@ import { fileRouter } from "./router/v2/files/file.router";
 import { execSync } from "child_process";
 import fs from "fs"
 import swaggerUi from "swagger-ui-express";
+import { rateLimiter } from "./middleware/rateLimiter";
 
 execSync('npx swagger-cli bundle ./swagger/index.yaml --outfile ./swagger/bundle.json --type json');
 const swaggerDocument = JSON.parse(fs.readFileSync('./swagger/bundle.json', 'utf8'));
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 })
 
 app.use(logger);
+app.use(rateLimiter);
 // app.use("/v1/contact", contactRouter);
 // app.use("/v1/contacts", contactsRouter);
 // app.use("/v1/reports", reportRouter);

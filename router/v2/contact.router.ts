@@ -3,13 +3,11 @@ import { contactFactory } from "../../factory/contact.factory";
 import { errorHandler } from "../../factory/error.factory";
 import { validate } from "../../middleware/validate";
 import { createContactSchema, contactFetchSchema, contactSchema } from "../../schema/contact.schema";
+import { redisCache } from "../../factory/cache.factory";
 
 // generating instances of user router and controller
 const contactRouter = express.Router();
 const contactController = contactFactory.create();
-
-// fetches an user, validates if email parameter is provided or not
-contactRouter.get("/:id", errorHandler.controllerWrapper(validate(contactFetchSchema)) , errorHandler.controllerWrapper(contactController.getContact));
 
 // deletes an user, validates if email parameter is provided or not
 contactRouter.delete("/:id" , errorHandler.controllerWrapper(validate(contactFetchSchema)) , errorHandler.controllerWrapper(contactController.deleteContact));
@@ -19,5 +17,9 @@ contactRouter.patch("/", errorHandler.controllerWrapper(validate(contactSchema))
 
 // creates an user, validates if data in request body is provided or not ( email, phonenumber )
 contactRouter.post("/", errorHandler.controllerWrapper(validate(createContactSchema)), errorHandler.controllerWrapper(contactController.createContact));
+
+contactRouter.use(redisCache.cacheRequest(300));
+// fetches an user, validates if email parameter is provided or not
+contactRouter.get("/:id", errorHandler.controllerWrapper(validate(contactFetchSchema)) , errorHandler.controllerWrapper(contactController.getContact));
 
 export { contactRouter as v2ContactRouter };

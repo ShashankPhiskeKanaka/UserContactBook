@@ -6,6 +6,11 @@ import { writeFile } from "fs/promises";
 import type { userData } from "../user/user.methods";
 import { serverError } from "../../utils/error.utils";
 import retry from "async-retry"
+import { logActivity } from "../../utils/logging.utils";
+
+const wait = (ms : number) => {
+    new Promise(res => setTimeout(res, ms));
+}
 
 class filePgRepositoryClass {
 
@@ -15,6 +20,7 @@ class filePgRepositoryClass {
      * @param data 
      * @returns 
      */
+
     generateUploadSignature = async (fileName : string, userData : userData) => {
         // creates a random string to act as a public_id for cloudinary
         const storedId = crypto.randomBytes(40).toString("hex");
@@ -33,11 +39,29 @@ class filePgRepositoryClass {
             paramsToSign,
             config.file_api_secret
         )
+
+        const maxRetries = 3;
+        let attempt = 0;
         // storing the inital basic information about the file being uploaded to cloudinary
-        await pool.query(
-            `INSERT INTO files ("userId", name, "storedId", status, size, "fileType") VALUES ($1, $2, $3, $4, $5, $6)`,
-            [userData.id, fileName, storedId, 'pending', 0, 'image']
-        )
+        while(attempt < maxRetries) {
+            try{
+                await pool.query(
+                    `INSERT INTO files ("userId", name, "storedId", status, size, "fileType") VALUES ($1, $2, $3, $4, $5, $6)`,
+                    [userData.id, fileName, storedId, 'pending', 0, 'image']
+                );
+                break;
+            }catch (err: any) {
+                attempt++;
+
+                const isTransient = err.code == '57P01' || err.code == '08006' || err.message.includes("timeout");
+
+                if(isTransient && attempt < maxRetries) {
+                    const delay = Math.pow(2, attempt) * 500 + (Math.random() * 100);
+                    logActivity.log(`DB insert failed retrying`);
+                    await wait(delay);
+                }
+            }
+        }
 
         return {
             signature,

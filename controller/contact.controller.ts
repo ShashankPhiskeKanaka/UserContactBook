@@ -3,6 +3,7 @@ import { contactSerializer } from "../serializer/contact.serializer";
 
 import requestIp from "request-ip";
 import type { contactPgServicesClass } from "../services/contact.pgservices";
+import { authUtil } from "../utils/auth.utils";
 
 class contactControllerClass {
     constructor ( private contactService : contactPgServicesClass ) {} // service class passed in as parameter to the constructor
@@ -20,6 +21,8 @@ class contactControllerClass {
         // serialized the returned contact from the service layer
         const data = contactSerializer.serialize(contact);
         // sends back a response the client along with the contact and a success value
+        authUtil.invalidateKey(req.user.id, "contact");
+
         return res.status(201).json({
             success : true,
             data : data
@@ -86,6 +89,7 @@ class contactControllerClass {
         // serializes the returned updated contact
         const data = contactSerializer.serialize(contact);
         // sedns back a response to the client along with the updated contact data and a success value
+        authUtil.invalidateKey(req.user.id, "contact");
         return res.json({
             success : true,
             data : data
@@ -108,7 +112,9 @@ class contactControllerClass {
         const contact = await this.contactService.delete(id, ip ?? "", req.cookies.token);
         // serializes the returned deleted contact
         const data = contactSerializer.serialize(contact);
+        authUtil.invalidateKey(req.user.id, "contact");
         // sends a response back to the client along with the deleted contact and a success value
+        
         return res.json({
             success : true,
             data : data
